@@ -1,0 +1,24 @@
+---
+- name: Créer un dossier sur les serveurs Ubuntu
+  hosts: all
+  become: true
+  vars:
+    dossier: /opt/awx_demo   #valeur par défaut, surchargeable depuis AWX
+
+  tasks:
+    - name: Créer le dossier
+      ansible.builtin.file:
+        path: "{{ dossier }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+   - name: Vérifier que le dossier existe
+     ansible.builtin.stat:
+       path: "{{ dossier }}"
+     registre: resultat
+
+   - name: Afficher le résultat
+     ansible.builtin.debug:
+       msg: "{{ inventory_hostname }} → {{ dossier }} existe:  {{ resultat.stat.exists }}"
